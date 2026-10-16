@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>অ্যাডমিন | SMS IT Agency</title>
+<style>
+:root{--bg:#070b14;--p:#0d1424;--p2:#131c31;--ln:#1f2b45;--tx:#e8eefc;--mu:#a3b0cc;--bl:#2a86f5;--gr:#1fae5b;--rd:#e5484d}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.6 "Hind Siliguri","Noto Sans Bengali",system-ui,sans-serif}
+h1,h2,h3{margin:0}a{color:#7fb7ff}
+.top{position:sticky;top:0;z-index:5;background:var(--p);border-bottom:1px solid var(--ln);padding:10px 14px;display:flex;align-items:center;gap:10px}
+.top b{font-size:1.1rem}.top .sp{flex:1}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding:10px 14px;background:var(--p);border-bottom:1px solid var(--ln)}
+.tab{white-space:nowrap;padding:.45em 1em;border-radius:999px;border:1.5px solid #2b3b5e;background:none;color:var(--mu);font:inherit;cursor:pointer}
+.tab.on{background:var(--bl);border-color:var(--bl);color:#04101f;font-weight:600}
+.tab i{font-style:normal;background:var(--rd);color:#fff;border-radius:99px;padding:0 .5em;margin-left:6px;font-size:.85rem}
+main{max-width:980px;margin:0 auto;padding:16px 14px 80px}
+.bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:14px}.bar h2{flex:1;font-size:1.3rem}
+.b{font:inherit;font-weight:600;padding:.5em 1.1em;border-radius:10px;border:1.5px solid #3a4a6d;background:var(--p2);color:var(--tx);cursor:pointer}
+.b.pri{background:var(--bl);border-color:var(--bl);color:#04101f}.b.del{color:#ff8a8d;border-color:#5a2a2d}.b.sm{padding:.25em .8em;font-size:.92rem}
+.card{background:var(--p);border:1px solid var(--ln);border-radius:14px;padding:14px;margin-bottom:12px}
+.row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}.row .g{flex:1;min-width:180px}
+.mu{color:var(--mu);font-size:.93rem}.tag{display:inline-block;font-size:.8rem;padding:0 .6em;border-radius:99px;background:#1b2a4a;color:#9ac8ff;margin-right:6px}
+.tag.off{background:#3a2326;color:#ff9a9d}
+.thumb{width:64px;height:64px;border-radius:10px;object-fit:cover;background:#0a1020;display:grid;place-items:center;flex:none}
+label.f{display:grid;gap:5px;margin-bottom:12px;color:var(--mu);font-size:.95rem}label.f.c{display:flex;align-items:center;gap:8px}
+input,select,textarea{font:inherit;color:var(--tx);background:var(--bg);border:1.5px solid #2b3b5e;border-radius:10px;padding:.6em .75em;width:100%}
+input[type=checkbox]{width:auto}textarea{min-height:90px}input:focus,select:focus,textarea:focus{outline:none;border-color:var(--bl)}
+dialog{border:1px solid #2b3b5e;border-radius:18px;background:var(--p2);color:var(--tx);padding:0;width:min(560px,94vw);max-height:92vh}
+dialog::backdrop{background:rgba(3,6,12,.85)}#dform{padding:20px}#dform h3{margin-bottom:14px}
+.prev{max-height:110px;border-radius:10px;margin-top:6px}
+.login{max-width:360px;margin:12vh auto;padding:0 16px}.err{color:#ff9a9d;min-height:1.5em}
+.st{font:inherit;width:auto;padding:.3em .6em}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#fff;color:#0b1220;padding:10px 18px;border-radius:10px;opacity:0;transition:opacity .25s;pointer-events:none;z-index:99}.toast.on{opacity:1}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<dialog id="dlg"><form id="dform"></form></dialog>
+<div class="toast" id="toast"></div>
+<script>
+"use strict";
+const $=(s,r=document)=>r.querySelector(s);
+const ICONS=['chat','palette','megaphone','image','film','code','cart','layout','search','users'];
+const STAT={new:'নতুন',processing:'চলছে',done:'সম্পন্ন',cancelled:'বাতিল'};
+let T=localStorage.getItem('tk'),D=null,tab='orders',ofilter='all',ifilter='all';
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('on'),3000)}
+async function api(p,m='GET',b){
+  const r=await fetch('/api/'+p,{method:m,headers:{...(T?{Authorization:'Bearer '+T}:{}),...(b!==undefined?{'Content-Type':'application/json'}:{})},body:b!==undefined?JSON.stringify(b):undefined});
+  const j=await r.json().catch(()=>({}));
+  if(r.status===401&&p!=='login'){logout();throw new Error(j.error||'লগইন করুন')}
+  if(!r.ok)throw new Error(j.error||'সমস্যা হয়েছে');return j}
+async function upload(file){
+  const r=await fetch('/api/admin/upload?name='+encodeURIComponent(file.name),{method:'POST',headers:{Authorization:'Bearer '+T},body:file});
+  const j=await r.json();if(!r.ok)throw new Error(j.error);return j.url}
+function logout(){T=null;localStorage.removeItem('tk');loginView()}
+function loginView(){
+  $('#app').innerHTML=`<div class="login"><h2>অ্যাডমিন লগইন</h2><p class="mu">SMS IT Agency</p>
+  <form id="lf"><label class="f">পাসওয়ার্ড<input type="password" id="pw" autofocus autocomplete="current-password"></label>
+  <p class="err" id="le"></p><button class="b pri" style="width:100%">প্রবেশ করুন</button></form></div>`;
+  $('#lf').onsubmit=async e=>{e.preventDefault();try{T=(await api('login','POST',{password:$('#pw').value})).token;localStorage.setItem('tk',T);load()}catch(x){$('#le').textContent=x.message}}}
+async function load(){try{D=await api('admin/all');render()}catch(e){if(T)toast(e.message)}}
+
+/* ---------- ফর্ম-স্কিমা: নতুন ঘর যোগ করতে এখানে একটি লাইন যোগ করুন ---------- */
+const secOpts=()=>D.sections.map(s=>[s.id,s.title]);
+const SCHEMA={
+ sections:{label:'সেকশন / সার্ভিস',fields:[['title','নাম','text'],['desc','সংক্ষিপ্ত বিবরণ','area'],['icon','আইকন','sel',ICONS.map(x=>[x,x])],['message','WhatsApp-এ আগে থেকে লেখা বার্তা','area'],['orderable','অর্ডার ফর্মে দেখাবে','check'],['order','ক্রম (ছোট সংখ্যা আগে)','num'],['enabled','সাইটে দেখাবে','check']]},
+ items:{label:'কাজ / প্রজেক্ট',fields:[['section','কোন সেকশনে','sel',secOpts],['type','ধরন','sel',[['image','ছবি'],['video','ভিডিও']]],['src','ছবি / ভিডিও ফাইল','file'],['poster','ভিডিওর থাম্বনেইল ছবি','file'],['title','শিরোনাম','text'],['desc','বিবরণ','area'],['alt','ছবির বর্ণনা (ঐচ্ছিক)','text'],['featured','"বাছাই করা কাজ" অংশে দেখাবে (শুধু ছবি)','check'],['facts','সংখ্যা/ফলাফল (প্রতি লাইনে: মান | লেবেল)','facts'],['order','ক্রম','num'],['enabled','সাইটে দেখাবে','check']]},
+ pages:{label:'পেজ',fields:[['title','পেজের নাম','text'],['slug','লিংকের নাম (ইংরেজি/বাংলা, স্পেস ছাড়া)','text'],['content','লেখা (## দিয়ে শিরোনাম, ফাঁকা লাইনে নতুন অনুচ্ছেদ, ! লিংক দিয়ে ছবি)','long'],['inNav','মেনুতে দেখাবে','check'],['order','ক্রম','num'],['enabled','সাইটে দেখাবে','check']]}
+};
+const SETTINGS=[['name','ব্যবসার নাম','text'],['logo','লোগো','file'],['heroImage','হিরো-র ছবি','file'],['heroTitle','হিরো শিরোনাম','text'],['heroLead','হিরো লেখা','area'],['aboutText','আমাদের সম্পর্কে (ফাঁকা লাইনে নতুন অনুচ্ছেদ)','long'],['slogan','স্লোগান (প্রতি লাইনে একটি)','area'],['whatsappNumber','WhatsApp নম্বর (দেশের কোড সহ শুধু সংখ্যা, যেমন 8801XXXXXXXXX; অথবা পুরো wa.me লিংক)','text'],['messengerUrl','Messenger লিংক','text'],['facebookPageUrl','ফেসবুক পেজ লিংক','text'],['email','ইমেইল','text'],['youtube','YouTube লিংক','text'],['instagram','Instagram লিংক','text'],['tiktok','TikTok লিংক','text'],['defaultMessage','সাধারণ WhatsApp বার্তা','area']];
+
+function field(f,val){
+  const [k,l,t,o]=f,w=document.createElement('label');w.className='f'+(t==='check'?' c':'');
+  let i;
+  if(t==='area'||t==='long'||t==='facts'){i=document.createElement('textarea');if(t==='long')i.style.minHeight='180px';i.value=t==='facts'?(val||[]).map(x=>x.v+' | '+x.l).join('\n'):val||''}
+  else if(t==='check'){i=document.createElement('input');i.type='checkbox';i.checked=!!val}
+  else if(t==='sel'){i=document.createElement('select');(typeof o==='function'?o():o).forEach(([v,n])=>i.add(new Option(n,v)));i.value=val??''}
+  else{i=document.createElement('input');i.type=t==='num'?'number':'text';i.value=val??''}
+  i.name=k;i.dataset.t=t;
+  if(t==='check'){w.append(i,l)}else w.append(l,i);
+  if(t==='file'){
+    const fi=document.createElement('input');fi.type='file';fi.accept='image/*,video/mp4,video/webm';
+    const pv=document.createElement('div'),show=()=>{pv.innerHTML=i.value?(/\.(mp4|webm)$/i.test(i.value)?`<video class="prev" src="${esc(i.value)}" muted></video>`:`<img class="prev" src="${esc(i.value)}" alt="">`):''};
+    fi.onchange=async()=>{if(!fi.files[0])return;try{toast('আপলোড হচ্ছে…');i.value=await upload(fi.files[0]);show();toast('আপলোড হয়েছে')}catch(e){toast(e.message)}};
+    i.oninput=show;show();w.append(fi,pv)}
+  return w}
+function collect(form){
+  const r={};form.querySelectorAll('[name]').forEach(e=>{const t=e.dataset.t,k=e.name;
+    r[k]=t==='check'?e.checked:t==='num'?(+e.value||0):t==='facts'?e.value.split('\n').map(x=>x.split('|')).filter(a=>a[0].trim()).map(a=>({v:a[0].trim(),l:(a[1]||'').trim()})):e.value.trim()});return r}
+function defaults(c){
+  const mx=Math.max(0,...D[c].map(x=>x.order||0))+1;
+  return c==='sections'?{icon:'chat',orderable:true,enabled:true,order:mx}:c==='items'?{type:'image',enabled:true,featured:false,section:D.sections[0]?.id,order:mx}:{inNav:true,enabled:true,order:mx}}
+function edit(c,rec){
+  const S=SCHEMA[c],isNew=!rec;rec=rec||defaults(c);const f=$('#dform');
+  f.innerHTML=`<h3>${isNew?'নতুন ':'সম্পাদনা: '}${S.label}</h3>`;
+  S.fields.forEach(x=>f.append(field(x,rec[x[0]])));
+  f.insertAdjacentHTML('beforeend',`<div class="row"><button class="b pri">সংরক্ষণ</button><button class="b" type="button" id="cx">বাতিল</button>${isNew?'':'<button class="b del" type="button" id="dx">মুছুন</button>'}</div>`);
+  $('#cx').onclick=()=>$('#dlg').close();
+  if(!isNew)$('#dx').onclick=async()=>{if(!confirm('সত্যিই মুছবেন?'+(c==='sections'?' এই সেকশনের সব কাজও মুছে যাবে।':'')))return;await api('admin/'+c+'/'+rec.id,'DELETE');$('#dlg').close();await load();toast('মোছা হয়েছে')};
+  f.onsubmit=async e=>{e.preventDefault();const d=collect(f);if(!d.title){toast('নাম/শিরোনাম দিন');return}
+    try{await (isNew?api('admin/'+c,'POST',d):api('admin/'+c+'/'+rec.id,'PUT',d));$('#dlg').close();await load();toast('সংরক্ষিত হয়েছে')}catch(x){toast(x.message)}};
+  $('#dlg').showModal()}
+
+/* ---------- ভিউ ---------- */
+function render(){
+  const nn=D.orders.filter(o=>o.status==='new').length;document.title=(nn?`(${nn}) `:'')+'অ্যাডমিন | SMS IT Agency';
+  const tabs=[['orders','অর্ডার'+(nn?`<i>${nn}</i>`:'')],['sections','সেকশন / সার্ভিস'],['items','কাজ / প্রজেক্ট'],['pages','পেজ'],['settings','সেটিংস'],['backup','ব্যাকআপ']];
+  $('#app').innerHTML=`<div class="top"><b>SMS IT Agency · অ্যাডমিন</b><span class="sp"></span><a href="/" target="_blank" class="b sm" style="text-decoration:none">সাইট দেখুন</a><button class="b sm" id="lo">লগআউট</button></div>
+  <div class="tabs">${tabs.map(([k,l])=>`<button class="tab${k===tab?' on':''}" data-k="${k}">${l}</button>`).join('')}</div><main id="mn"></main>`;
+  $('#lo').onclick=logout;document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{tab=b.dataset.k;render()});
+  ({orders:vOrders,sections:vSections,items:vItems,pages:vPages,settings:vSettings,backup:vBackup})[tab]($('#mn'))}
+function head(m,t,c){m.innerHTML=`<div class="bar"><h2>${t}</h2>${c?`<button class="b pri" id="add">+ নতুন যোগ করুন</button>`:''}</div><div id="ls"></div>`;if(c)$('#add').onclick=()=>edit(c);return $('#ls')}
+const flags=x=>(x.enabled===false?'<span class="tag off">লুকানো</span>':'');
+
+function vOrders(m){
+  const ls=head(m,'অর্ডার ('+D.orders.length+')');
+  ls.insertAdjacentHTML('beforebegin',`<div class="bar">${[['all','সব'],...Object.entries(STAT)].map(([k,l])=>`<button class="tab${k===ofilter?' on':''}" data-f="${k}">${l}</button>`).join('')}</div>`);
+  m.querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>{ofilter=b.dataset.f;vOrders(m)});
+  const list=D.orders.filter(o=>ofilter==='all'||o.status===ofilter);
+  if(!list.length)ls.innerHTML='<p class="mu">এখানে কোনো অর্ডার নেই।</p>';
+  list.forEach(o=>{
+    const wa=o.phone.replace(/\D/g,'').replace(/^0/,'880'),c=document.createElement('div');c.className='card';
+    c.innerHTML=`<div class="row"><div class="g"><b>${esc(o.name)}</b> <span class="tag">${esc(o.service)}</span><div class="mu">${new Date(o.createdAt).toLocaleString('bn-BD')}</div></div>
+    <select class="st">${Object.entries(STAT).map(([k,l])=>`<option value="${k}"${k===o.status?' selected':''}>${l}</option>`).join('')}</select></div>
+    <p style="margin:8px 0"><a href="tel:${esc(o.phone)}">${esc(o.phone)}</a> · <a href="https://wa.me/${wa}" target="_blank" rel="noopener">WhatsApp</a>${o.email?' · '+esc(o.email):''}</p>
+    ${o.message?`<p style="white-space:pre-wrap;margin:0 0 8px">${esc(o.message)}</p>`:''}
+    <div class="row"><input class="g nt" placeholder="নোট (শুধু আপনি দেখবেন)" value="${esc(o.note)}"><button class="b sm del">মুছুন</button></div>`;
+    c.querySelector('.st').onchange=async e=>{await api('admin/orders/'+o.id,'PUT',{status:e.target.value});o.status=e.target.value;render();toast('আপডেট হয়েছে')};
+    c.querySelector('.nt').onchange=async e=>{await api('admin/orders/'+o.id,'PUT',{note:e.target.value});o.note=e.target.value;toast('নোট সংরক্ষিত')};
+    c.querySelector('.del').onclick=async()=>{if(confirm('এই অর্ডার মুছবেন?')){await api('admin/orders/'+o.id,'DELETE');await load()}};
+    ls.append(c)})}
+function vSections(m){
+  const ls=head(m,'সেকশন / সার্ভিস','sections');
+  D.sections.slice().sort((a,b)=>(a.order||0)-(b.order||0)).forEach(s=>{
+    const n=D.items.filter(i=>i.section===s.id).length,c=document.createElement('div');c.className='card';
+    c.innerHTML=`<div class="row"><div class="g"><b>${esc(s.title)}</b> ${flags(s)}${s.orderable===false?'<span class="tag off">অর্ডার বন্ধ</span>':''}<div class="mu">${esc(s.desc)}</div><div class="mu">${n}টি কাজ</div></div><button class="b sm">সম্পাদনা</button></div>`;
+    c.querySelector('button').onclick=()=>edit('sections',s);ls.append(c)})}
+function vItems(m){
+  const ls=head(m,'কাজ / প্রজেক্ট','items');
+  ls.insertAdjacentHTML('beforebegin',`<div class="bar"><select id="sf" style="max-width:300px"><option value="all">সব সেকশন</option>${D.sections.map(s=>`<option value="${s.id}"${s.id===ifilter?' selected':''}>${esc(s.title)}</option>`).join('')}</select></div>`);
+  $('#sf').onchange=e=>{ifilter=e.target.value;vItems(m)};
+  const nm=id=>(D.sections.find(s=>s.id===id)||{}).title||'—';
+  D.items.filter(i=>ifilter==='all'||i.section===ifilter).sort((a,b)=>(a.order||0)-(b.order||0)).forEach(i=>{
+    const c=document.createElement('div');c.className='card';
+    const th=i.type==='video'?`<div class="thumb">▶</div>`:`<img class="thumb" src="${esc(i.src)}" alt="">`;
+    c.innerHTML=`<div class="row">${th}<div class="g"><b>${esc(i.title)}</b> ${flags(i)}${i.featured?'<span class="tag">বাছাই করা</span>':''}<div class="mu">${esc(nm(i.section))} · ${i.type==='video'?'ভিডিও':'ছবি'}</div></div><button class="b sm">সম্পাদনা</button></div>`;
+    c.querySelector('button').onclick=()=>edit('items',i);ls.append(c)});
+  if(!ls.children.length)ls.innerHTML='<p class="mu">এখানে এখনো কোনো কাজ নেই।</p>'}
+function vPages(m){
+  const ls=head(m,'পেজ','pages');
+  if(!D.pages.length)ls.innerHTML='<p class="mu">কোনো নতুন পেজ নেই। "নতুন যোগ করুন" চেপে পেজ বানান; লিংক হবে /#/p/লিংকের-নাম।</p>';
+  D.pages.slice().sort((a,b)=>(a.order||0)-(b.order||0)).forEach(p=>{
+    const c=document.createElement('div');c.className='card';
+    c.innerHTML=`<div class="row"><div class="g"><b>${esc(p.title)}</b> ${flags(p)}${p.inNav?'<span class="tag">মেনুতে</span>':''}<div class="mu">/#/p/${esc(p.slug)}</div></div><button class="b sm">সম্পাদনা</button></div>`;
+    c.querySelector('button').onclick=()=>edit('pages',p);ls.append(c)})}
+function vSettings(m){
+  m.innerHTML='<div class="bar"><h2>সেটিংস</h2></div><form class="card" id="sf2"></form>';const f=$('#sf2');
+  SETTINGS.forEach(x=>f.append(field(x,D.settings[x[0]])));
+  f.insertAdjacentHTML('beforeend','<button class="b pri">সংরক্ষণ</button>');
+  f.onsubmit=async e=>{e.preventDefault();try{await api('admin/settings','PUT',collect(f));await load();toast('সংরক্ষিত হয়েছে')}catch(x){toast(x.message)}}}
+function vBackup(m){
+  m.innerHTML=`<div class="bar"><h2>ব্যাকআপ</h2></div><div class="card"><p>পুরো সাইটের ডেটা (সেকশন, কাজ, পেজ, সেটিংস, অর্ডার) একটি ফাইলে নামান। ছবি/ভিডিও ফাইল এতে থাকে না।</p><button class="b pri" id="ex">ব্যাকআপ নামান</button></div>
+  <div class="card"><p>ব্যাকআপ ফাইল থেকে ফিরিয়ে আনুন (বর্তমান ডেটা বদলে যাবে):</p><input type="file" id="im" accept=".json"></div>
+  <div class="card mu">পাসওয়ার্ড বদলাতে Railway-র Variables-এ <b>ADMIN_PASSWORD</b> বদলে দিন।</div>`;
+  $('#ex').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(D,null,1)],{type:'application/json'}));a.download='sms-backup-'+new Date().toISOString().slice(0,10)+'.json';a.click()};
+  $('#im').onchange=async e=>{const f=e.target.files[0];if(!f||!confirm('বর্তমান সব ডেটা বদলে যাবে। নিশ্চিত?'))return;try{await api('admin/import','POST',JSON.parse(await f.text()));await load();toast('ফিরিয়ে আনা হয়েছে')}catch(x){toast(x.message)}}}
+
+if(T)load();else loginView();
+setInterval(()=>{if(T&&tab==='orders'&&!$('#dlg').open)load()},30000);
+</script>
+</body>
+</html>

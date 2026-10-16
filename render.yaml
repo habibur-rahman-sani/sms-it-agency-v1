@@ -1,0 +1,19 @@
+# Render Blueprint: Render-এ "New → Blueprint" দিয়ে এই রিপোজিটরি বেছে নিন।
+# Persistent Disk শুধু পেইড প্ল্যানে পাওয়া যায় (starter)। ফ্রি প্ল্যানে অর্ডার ও আপলোড রিস্টার্টে মুছে যায়।
+services:
+  - type: web
+    name: sms-it-agency
+    runtime: node
+    plan: starter
+    buildCommand: echo "no build needed"
+    startCommand: node server.js
+    healthCheckPath: /
+    envVars:
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: DATA_DIR
+        value: /data
+    disk:
+      name: sms-data
+      mountPath: /data
+      sizeGB: 1

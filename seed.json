@@ -1,0 +1,218 @@
+{
+ "settings": {
+  "name": "SMS IT Agency",
+  "slogan": "আপনার আস্থা, আমাদের প্রতিশ্রুতি।\nসফলতার পথে আপনার নির্ভরযোগ্য সঙ্গী।",
+  "logo": "assets/logos/logo-dark.png",
+  "heroImage": "assets/images/ads-messenger-active.jpg",
+  "heroTitle": "আপনার ব্যবসার ডিজিটাল সাফল্যে বিশ্বস্ত সঙ্গী",
+  "heroLead": "ডিজিটাল মার্কেটিং, সৃজনশীল ডিজাইন, ভিডিও এডিটিং এবং ওয়েবসাইট ডেভেলপমেন্টের মাধ্যমে আপনার ব্যবসাকে এগিয়ে নিতে আমরা পাশে আছি।",
+  "aboutText": "SMS IT Agency ব্যবসার অনলাইন উপস্থিতি গুছিয়ে তুলতে ডিজিটাল সার্ভিস দেয়। Facebook পেজের ডিজাইন থেকে বিজ্ঞাপন, ভিডিও থেকে ওয়েবসাইট, ব্র্যান্ডকে পেশাদারভাবে সামনে আনার কাজগুলো আমরা এক জায়গা থেকে করি।\n\nকাজ শুরুর আগে আপনার ব্যবসা আর লক্ষ্য শুনি, তারপর সেই অনুযায়ী সমাধান সাজাই।",
+  "whatsappNumber": "",
+  "messengerUrl": "",
+  "facebookPageUrl": "",
+  "email": "",
+  "youtube": "",
+  "instagram": "",
+  "tiktok": "",
+  "defaultMessage": "আসসালামু আলাইকুম, আমি আপনাদের ওয়েবসাইট দেখে যোগাযোগ করছি।"
+ },
+ "sections": [
+  {
+   "id": "fb-follow",
+   "icon": "chat",
+   "title": "Facebook Follow ও প্রমোশন",
+   "desc": "পেজের লাইক, ফলো ও প্রমোশন সাপোর্ট, যাতে আপনার পেজ আরও মানুষের কাছে পৌঁছায়।",
+   "message": "আসসালামু আলাইকুম, আমি Facebook Page Like ও Follow সার্ভিস সম্পর্কে জানতে চাই।",
+   "orderable": true,
+   "enabled": true,
+   "order": 1
+  },
+  {
+   "id": "fb-branding",
+   "icon": "palette",
+   "title": "Facebook Page লোগো ও ব্যানার ডিজাইন",
+   "desc": "পেজের প্রোফাইল ছবি, কভার ও ব্যানার, যাতে প্রথম দেখাতেই ব্র্যান্ডটা পেশাদার মনে হয়।",
+   "message": "আসসালামু আলাইকুম, আমি Facebook Page লোগো ও ব্যানার ডিজাইন সম্পর্কে জানতে চাই।",
+   "orderable": true,
+   "enabled": true,
+   "order": 2
+  },
+  {
+   "id": "fb-ads",
+   "icon": "megaphone",
+   "title": "Facebook Ads ও ডিজিটাল মার্কেটিং",
+   "desc": "Messenger ও WhatsApp-এ কথোপকথন পাওয়ার লক্ষ্যে বিজ্ঞাপন ক্যাম্পেইন সাজানো ও চালানো।",
+   "message": "আসসালামু আলাইকুম, আমি Facebook Ads ও ডিজিটাল মার্কেটিং সম্পর্কে জানতে চাই।",
+   "orderable": true,
+   "enabled": true,
+   "order": 3
+  },
+  {
+   "id": "graphic",
+   "icon": "image",
+   "title": "গ্রাফিক ডিজাইন",
+   "desc": "পোস্ট, ব্যানার ও প্রচারের ডিজাইন, আপনার ব্র্যান্ডের সঙ্গে মিলিয়ে।",
+   "message": "আসসালামু আলাইকুম, আমি গ্রাফিক ডিজাইন সার্ভিস সম্পর্কে জানতে চাই।",
+   "orderable": true,
+   "enabled": true,
+   "order": 4
+  },
+  {
+   "id": "video",
+   "icon": "film",
+   "title": "ভিডিও এডিটিং ও প্রমোশনাল ভিডিও",
+   "desc": "অ্যাড, রিল ও প্রোডাক্ট ভিডিও এডিট, যা দ্রুত বার্তা পৌঁছে দেয়।",
+   "message": "আসসালামু আলাইকুম, আমি ভিডিও এডিটিং ও প্রমোশনাল ভিডিও সম্পর্কে জানতে চাই।",
+   "orderable": true,
+   "enabled": true,
+   "order": 5
+  },
+  {
+   "id": "website",
+   "icon": "code",
+   "title": "ওয়েবসাইট ডেভেলপমেন্ট",
+   "desc": "ব্যবসার পরিচয় তুলে ধরার জন্য মোবাইল-ফ্রেন্ডলি ওয়েবসাইট।",
+   "message": "আসসালামু আলাইকুম, আমি ওয়েবসাইট ডেভেলপমেন্ট সম্পর্কে জানতে চাই।",
+   "orderable": true,
+   "enabled": true,
+   "order": 6
+  },
+  {
+   "id": "ecommerce",
+   "icon": "cart",
+   "title": "ই-কমার্স ওয়েবসাইট",
+   "desc": "পণ্য দেখানো ও অর্ডার নেওয়ার জন্য অনলাইন শপ।",
+   "message": "আসসালামু আলাইকুম, আমি ই-কমার্স ওয়েবসাইট সম্পর্কে জানতে চাই।",
+   "orderable": true,
+   "enabled": true,
+   "order": 7
+  },
+  {
+   "id": "landing",
+   "icon": "layout",
+   "title": "ল্যান্ডিং পেজ ডিজাইন ও ডেভেলপমেন্ট",
+   "desc": "একটি পণ্য বা অফারের জন্য একটাই পেজ, যেখান থেকে ক্রেতা সরাসরি যোগাযোগ করতে পারে।",
+   "message": "আসসালামু আলাইকুম, আমি ল্যান্ডিং পেজ ডিজাইন ও ডেভেলপমেন্ট সম্পর্কে জানতে চাই।",
+   "orderable": true,
+   "enabled": true,
+   "order": 8
+  },
+  {
+   "id": "seo",
+   "icon": "search",
+   "title": "এসইও (SEO)",
+   "desc": "Google-এ আপনার ওয়েবসাইট ও ব্যবসা খুঁজে পাওয়ার উপযোগী করে সাজানো।",
+   "message": "আসসালামু আলাইকুম, আমি এসইও সার্ভিস সম্পর্কে জানতে চাই।",
+   "orderable": true,
+   "enabled": true,
+   "order": 9
+  }
+ ],
+ "items": [
+  {
+   "id": "i0",
+   "section": "fb-ads",
+   "type": "image",
+   "title": "Messenger ক্যাম্পেইন, Ads Manager রিপোর্ট",
+   "desc": "স্ক্রিনশটে ৪১৪টি মেসেজিং কথোপকথন, প্রতিটির খরচ $0.07, মোট খরচ $30.63।",
+   "src": "assets/images/ads-messenger-active.jpg",
+   "poster": "",
+   "alt": "Facebook Ads Manager-এ একটি সক্রিয় Messenger ক্যাম্পেইনের ফলাফল",
+   "w": 1080,
+   "h": 1236,
+   "featured": true,
+   "facts": [
+    {
+     "v": "৪১৪",
+     "l": "মেসেজিং কথোপকথন"
+    },
+    {
+     "v": "$0.07",
+     "l": "প্রতি কথোপকথনের খরচ"
+    },
+    {
+     "v": "$30.63",
+     "l": "মোট খরচ"
+    }
+   ],
+   "order": 1,
+   "enabled": true
+  },
+  {
+   "id": "i1",
+   "section": "fb-ads",
+   "type": "image",
+   "title": "WhatsApp ও কিডস পণ্যের ক্যাম্পেইন রিপোর্ট",
+   "desc": "স্ক্রিনশটে একটি ক্যাম্পেইনে ৬৩৪ এবং আরেকটিতে ১.২K কথোপকথন, খরচ যথাক্রমে $0.05 ও $0.02 করে।",
+   "src": "assets/images/ads-whatsapp-tivani.jpg",
+   "poster": "",
+   "alt": "Facebook Ads Manager-এ দুটি ক্যাম্পেইনের মেসেজিং কথোপকথনের সংখ্যা ও খরচ",
+   "w": 817,
+   "h": 1508,
+   "featured": true,
+   "facts": [],
+   "order": 2,
+   "enabled": true
+  },
+  {
+   "id": "i2",
+   "section": "fb-ads",
+   "type": "image",
+   "title": "Messenger ক্যাম্পেইন, ১.৭K কথোপকথন",
+   "desc": "স্ক্রিনশটে ১.৭K মেসেজিং কথোপকথন, প্রতিটির খরচ $0.04, মোট খরচ $70.28।",
+   "src": "assets/images/ads-messenger-1-7k.jpg",
+   "poster": "",
+   "alt": "Facebook Ads Manager-এ বন্ধ হয়ে যাওয়া একটি ক্যাম্পেইনের সম্পূর্ণ ফলাফল",
+   "w": 1080,
+   "h": 1006,
+   "featured": true,
+   "facts": [],
+   "order": 3,
+   "enabled": true
+  },
+  {
+   "id": "i3",
+   "section": "fb-ads",
+   "type": "image",
+   "title": "নতুন ক্যাম্পেইন",
+   "desc": "সদ্য চালু হওয়া Messenger ক্যাম্পেইন।",
+   "src": "assets/images/ads-new-campaign.jpg",
+   "poster": "",
+   "alt": "Facebook Ads Manager-এ নতুন একটি ক্যাম্পেইন",
+   "w": 1080,
+   "h": 1003,
+   "featured": false,
+   "facts": [],
+   "order": 4,
+   "enabled": false
+  },
+  {
+   "id": "v1",
+   "section": "video",
+   "type": "video",
+   "title": "প্রমোশনাল ভিডিও নমুনা",
+   "desc": "ড্রোন শটে তোলা এলাকার পরিচিতিমূলক ভিডিও, বাংলা টেক্সট ও ব্র্যান্ড লোগো সহ।",
+   "src": "assets/videos/promo-1.mp4",
+   "poster": "assets/images/promo-1-poster.jpg",
+   "alt": "ড্রোন থেকে তোলা এলাকার প্রমোশনাল ভিডিও",
+   "w": null,
+   "h": null,
+   "featured": false,
+   "facts": [],
+   "order": 10,
+   "enabled": true
+  }
+ ],
+ "pages": [
+  {
+   "id": "p1",
+   "slug": "faq",
+   "title": "সাধারণ প্রশ্ন",
+   "content": "## কীভাবে অর্ডার করব?\nসার্ভিসের নিচে \"অর্ডার করুন\" বাটনে চাপ দিয়ে ফর্ম পূরণ করুন।\n\nএটি একটি নমুনা পেজ। অ্যাডমিন প্যানেল থেকে সম্পাদনা বা মুছে দিতে পারবেন।",
+   "inNav": false,
+   "enabled": false,
+   "order": 1
+  }
+ ],
+ "orders": []
+}
